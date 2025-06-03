@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teleprompter Profesional</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #FFF;
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        #teleprompter {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            font-size: 3.5rem;
+            line-height: 1.4;
+        }
+        
+        #current-line {
+            max-width: 900px;
+            margin: 0 auto;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+        
+        #controls {
+            background: #111;
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            min-width: 100px;
+        }
+        
+        #text-input {
+            flex: 1;
+            width: 100%;
+            min-height: 120px; /* Área más grande */
+            max-width: 800px;  /* Ancho aumentado */
+            padding: 15px;     /* Más espacio interno */
+            font-size: 1.1rem;
+            background: #222;
+            color: white;
+            border: 1px solid #444;
+            resize: vertical; /* Permite ajustar verticalmente */
+        }
+        
+        .speed-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 250px;
+        }
+        
+        #speed-control {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 8px;
+            background: #444;
+            border-radius: 4px;
+        }
+        
+        #speed-control::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        #speed-value {
+            width: 40px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .slow-text { color: #4CAF50; }
+        .fast-text { color: #F44336; }
+    </style>
+</head>
+<body>
+    <div id="teleprompter">
+        <div id="current-line">Ajusta la velocidad y escribe tu texto abajo</div>
+    </div>
+    
+    <div id="controls">
+        <textarea id="text-input" placeholder="Escribe o pega tu texto aquí... (Cada línea se mostrará individualmente)"></textarea>
+        
+        <div style="display: flex; gap: 10px; align-items: center; width: 100%; justify-content: center;">
+            <button id="start-btn">▶ Iniciar</button>
+            <button id="pause-btn" disabled>⏸ Pausar</button>
+            <button id="reset-btn">↻ Reiniciar</button>
+            
+            <div class="speed-container">
+                <span class="slow-text">Lento</span>
+                <input type="range" id="speed-control" min="0.5" max="10" step="0.5" value="2">
+                <span class="fast-text">Rápido</span>
+                <span id="speed-value">2x</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elementos DOM
+        const currentLineEl = document.getElementById('current-line');
+        const textInput = document.getElementById('text-input');
+        const startBtn = document.getElementById('start-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const speedControl = document.getElementById('speed-control');
+        const speedValue = document.getElementById('speed-value');
+        
+        // Variables de estado
+        let lines = [];
+        let currentIndex = 0;
+        let isPlaying = false;
+        let intervalId = null;
+        
+        // Preparar las líneas del texto
+        function prepareLines() {
+            lines = textInput.value.split('\n')
+                          .filter(line => line.trim() !== '');
+            currentIndex = 0;
+        }
+        
+        // Mostrar la línea actual
+        function showCurrentLine() {
+            if (lines.length === 0) return;
+            
+            currentLineEl.style.opacity = 0;
+            
+            setTimeout(() => {
+                currentLineEl.textContent = lines[currentIndex];
+                currentLineEl.style.opacity = 1;
+            }, 300);
+        }
+        
+        // Avanzar a la siguiente línea
+        function nextLine() {
+            currentIndex++;
+            
+            if (currentIndex >= lines.length) {
+                pause();
+                return;
+            }
+            
+            showCurrentLine();
+        }
+        
+        // Iniciar el teleprompter
+        function start() {
+            if (isPlaying) return;
+            
+            if (lines.length === 0) {
+                prepareLines();
+                if (lines.length === 0) {
+                    alert('Por favor ingresa algún texto primero');
+                    return;
+                }
+            }
+            
+            isPlaying = true;
+            startBtn.disabled = true;
+            pauseBtn.disabled = false;
+            
+            const speed = parseFloat(speedControl.value);
+            const delay = (1 / speed) * 2000; // Fórmula ajustada
+            
+            showCurrentLine();
+            intervalId = setInterval(nextLine, delay);
+        }
+        
+        // Pausar el teleprompter
+        function pause() {
+            if (!isPlaying) return;
+            
+            clearInterval(intervalId);
+            isPlaying = false;
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+        }
+        
+        // Reiniciar el teleprompter
+        function reset() {
+            pause();
+            prepareLines();
+            showCurrentLine();
+        }
+        
+        // Actualizar velocidad
+        function updateSpeedDisplay() {
+            const speed = parseFloat(speedControl.value);
+            speedValue.textContent = speed.toFixed(1) + 'x';
+            
+            if (speed < 3) {
+                speedValue.className = 'slow-text';
+            } else if (speed > 7) {
+                speedValue.className = 'fast-text';
+            } else {
+                speedValue.className = '';
+            }
+        }
+        
+        // Event listeners
+        startBtn.addEventListener('click', start);
+        pauseBtn.addEventListener('click', pause);
+        resetBtn.addEventListener('click', reset);
+        
+        speedControl.addEventListener('input', () => {
+            updateSpeedDisplay();
+            
+            if (isPlaying) {
+                pause();
+                start();
+            }
+        });
+        
+        // Texto de ejemplo
+        textInput.value = `Ejemplo de texto para el teleprompter:
+
+1. Este es un texto de muestra
+2. Puedes editarlo completamente
+3. Cada línea se mostrará individualmente
+4. Ajusta la velocidad según necesites
+
+Características:
+✔ Área de texto ampliada
+✔ Control de velocidad preciso (0.5x - 10x)
+✔ Diseño profesional y fácil de usar`;
+
+        updateSpeedDisplay();
+    </script>
+</body>
+</html>
