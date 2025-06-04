@@ -31,6 +31,108 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
+        }
+        
+        #controls-container {
+            background: var(--control-bg);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            padding: 10px 15px;
+        }
+        
+        #top-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        
+        .buttons-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background: var(--border-color);
+            color: var(--text-color);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            min-width: 80px;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+        
+        button:hover {
+            background: #555;
+        }
+        
+        .speed-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            min-width: 200px;
+            max-width: 350px;
+        }
+        
+        #speed-control {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 4px;
+            min-width: 120px;
+        }
+        
+        #speed-control::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--text-color);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        
+        #speed-value {
+            width: 35px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .slow-text, .fast-text {
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+        
+        .slow-text { color: var(--slow-color); }
+        .fast-text { color: var(--fast-color); }
+
+        #text-input-container {
+            margin-top: 10px;
+        }
+        
+        #text-input {
+            width: 100%;
+            min-height: 80px;
+            max-height: 120px;
+            padding: 12px;
+            font-size: 0.95rem;
+            background: var(--text-area-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            resize: vertical;
+            box-sizing: border-box;
+            border-radius: 5px;
         }
         
         #text-display {
@@ -39,7 +141,7 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             overflow: auto;
         }
         
@@ -53,113 +155,11 @@
             font-size: clamp(1.5rem, 4vw, 3.5rem);
             line-height: 1.4;
         }
-        
-        #controls-container {
-            background: var(--control-bg);
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .main-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .buttons-container {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        button {
-            background: var(--border-color);
-            color: var(--text-color);
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            min-width: 90px;
-            white-space: nowrap;
-        }
-        
-        #text-input {
-            width: 100%;
-            min-height: 100px;
-            padding: 15px;
-            font-size: 1.1rem;
-            background: var(--text-area-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            resize: vertical;
-            box-sizing: border-box;
-        }
-        
-        .speed-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-            min-width: 250px;
-            max-width: 400px;
-        }
-        
-        #speed-control {
-            flex: 1;
-            -webkit-appearance: none;
-            height: 8px;
-            background: var(--border-color);
-            border-radius: 4px;
-            min-width: 150px;
-        }
-        
-        #speed-control::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            background: var(--text-color);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        #speed-value {
-            width: 40px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 0.95rem;
-        }
-        
-        .slow-text, .fast-text {
-            font-size: 0.85rem;
-            white-space: nowrap;
-        }
-        
-        .slow-text { color: var(--slow-color); }
-        .fast-text { color: var(--fast-color); }
 
         /* Media Queries */
         @media (max-width: 768px) {
-            #text-display {
-                padding: 15px;
-            }
-            
-            #current-line {
-                font-size: clamp(1.3rem, 4vw, 2.8rem);
-            }
-            
             #controls-container {
-                padding: 12px;
-                gap: 12px;
-            }
-            
-            .main-controls {
-                flex-direction: column;
-                gap: 12px;
+                padding: 8px 12px;
             }
             
             .buttons-container {
@@ -168,15 +168,17 @@
             }
             
             button {
-                padding: 8px 12px;
-                min-width: 80px;
-                font-size: 0.9rem;
+                padding: 6px 10px;
+                min-width: 70px;
+                font-size: 0.85rem;
                 flex: 1;
             }
             
             #text-input {
-                min-height: 80px;
-                font-size: 1rem;
+                min-height: 70px;
+                max-height: 100px;
+                padding: 10px;
+                font-size: 0.9rem;
             }
             
             .speed-container {
@@ -188,37 +190,27 @@
         @media (max-width: 480px) {
             #current-line {
                 font-size: clamp(1.2rem, 5vw, 2rem);
-            }
-            
-            #controls-container {
-                padding: 10px;
-                gap: 10px;
-            }
-            
-            button {
-                padding: 8px 10px;
-                min-width: 70px;
-                font-size: 0.85rem;
+                padding: 8px;
             }
             
             #text-input {
-                min-height: 70px;
-                padding: 12px;
-                font-size: 0.95rem;
+                min-height: 60px;
+                max-height: 80px;
+            }
+            
+            button {
+                padding: 5px 8px;
+                min-width: 60px;
+                font-size: 0.8rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- ÁREA PRINCIPAL DEL TELPROMPTER (ARRIBA) -->
     <div id="teleprompter-container">
-        <div id="text-display">
-            <div id="current-line">Escribe tu texto abajo y ajusta la velocidad</div>
-        </div>
-        
-        <!-- CONTROLES EN LA PARTE INFERIOR -->
+        <!-- CONTROLES ARRIBA DEL TODO -->
         <div id="controls-container">
-            <div class="main-controls">
+            <div id="top-controls">
                 <div class="buttons-container">
                     <button id="start-btn">▶ Iniciar</button>
                     <button id="pause-btn" disabled>⏸ Pausar</button>
@@ -233,7 +225,15 @@
                 </div>
             </div>
             
-            <textarea id="text-input" placeholder="Escribe o pega tu texto aquí... (Cada línea se mostrará individualmente)"></textarea>
+            <!-- ÁREA DE TEXTO DEBAJO DE LOS CONTROLES -->
+            <div id="text-input-container">
+                <textarea id="text-input" placeholder="Escribe o pega tu texto aquí... (Cada línea se mostrará individualmente)"></textarea>
+            </div>
+        </div>
+        
+        <!-- ÁREA DE VISUALIZACIÓN DEL TEXTO (OCUPA EL RESTO DEL ESPACIO) -->
+        <div id="text-display">
+            <div id="current-line">Ajusta la velocidad y escribe tu texto arriba</div>
         </div>
     </div>
 
@@ -268,6 +268,7 @@
             setTimeout(() => {
                 currentLineEl.textContent = lines[currentIndex];
                 currentLineEl.style.opacity = 1;
+                currentLineEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 300);
         }
         
@@ -340,17 +341,18 @@
         });
         
         // Texto de ejemplo
-        textInput.value = `Ejemplo de teleprompter:\n\n1. Controles en la parte inferior\n2. Área de texto clara\n3. Diseño completamente responsive\n4. Velocidad ajustable`;
+        textInput.value = `Ejemplo de teleprompter:\n\n1. Controles en la parte superior\n2. Área de texto visible\n3. Diseño optimizado`;
         updateSpeedDisplay();
         
-        // Ajustar altura del textarea automáticamente
-        function adjustTextareaHeight() {
+        // Ajustar altura del textarea
+        function adjustTextarea() {
             textInput.style.height = 'auto';
             textInput.style.height = (textInput.scrollHeight) + 'px';
         }
         
-        textInput.addEventListener('input', adjustTextareaHeight);
-        adjustTextareaHeight();
+        textInput.addEventListener('input', adjustTextarea);
+        window.addEventListener('resize', adjustTextarea);
+        adjustTextarea();
     </script>
 </body>
 </html>
