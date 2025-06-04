@@ -39,27 +39,24 @@
         
         #controls {
             background: #111;
-            padding: 15px;
+            padding: 12px 15px;
             display: flex;
             flex-direction: column;
             gap: 12px;
-            align-items: center;
         }
         
-        .main-controls {
+        .top-controls {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            width: 100%;
+            gap: 15px;
+            flex-wrap: wrap;
         }
         
         .buttons-container {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            justify-content: center;
         }
         
         button {
@@ -77,7 +74,6 @@
         #text-input {
             width: 100%;
             min-height: 100px;
-            max-width: 800px;
             padding: 15px;
             font-size: 1.1rem;
             background: #222;
@@ -91,8 +87,9 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            width: auto;
+            flex: 1;
             min-width: 250px;
+            max-width: 400px;
         }
         
         #speed-control {
@@ -128,148 +125,38 @@
         .slow-text { color: #4CAF50; }
         .fast-text { color: #F44336; }
 
-        /* Media Queries para Responsive */
-        @media (max-width: 992px) {
-            #teleprompter {
-                font-size: 3rem;
-                padding: 15px;
-            }
-            
-            #current-line {
-                max-width: 700px;
-            }
-        }
-
+        /* Media Queries */
         @media (max-width: 768px) {
             #teleprompter {
                 font-size: 2.5rem;
                 padding: 10px;
             }
             
-            #current-line {
-                max-width: 550px;
-            }
-            
-            #text-input {
-                min-height: 80px;
-                font-size: 1rem;
-                padding: 10px;
-            }
-            
-            button {
-                padding: 8px 12px;
-                min-width: 80px;
-                font-size: 0.9rem;
-            }
-            
-            .main-controls {
-                gap: 10px;
-            }
-            
-            .speed-container {
-                min-width: 220px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            #teleprompter {
-                font-size: 2rem;
-            }
-            
-            #current-line {
-                max-width: 400px;
-            }
-            
-            #controls {
-                padding: 12px 10px;
-                gap: 10px;
-            }
-            
-            .main-controls {
+            .top-controls {
                 flex-direction: column;
                 gap: 10px;
             }
             
             .buttons-container {
                 width: 100%;
-                justify-content: space-around;
-                gap: 8px;
-            }
-            
-            button {
-                padding: 8px;
-                min-width: 70px;
-                font-size: 0.85rem;
-                flex: 1;
+                justify-content: space-between;
             }
             
             .speed-container {
                 width: 100%;
-                max-width: 300px;
-                gap: 6px;
-            }
-            
-            .slow-text, .fast-text {
-                font-size: 0.8rem;
-            }
-            
-            #speed-value {
-                font-size: 0.9rem;
+                max-width: none;
             }
         }
 
-        @media (max-width: 400px) {
+        @media (max-width: 480px) {
             #teleprompter {
-                font-size: 1.6rem;
-            }
-            
-            #current-line {
-                max-width: 300px;
+                font-size: 2rem;
             }
             
             button {
-                padding: 6px 8px;
-                min-width: 60px;
-                font-size: 0.8rem;
-            }
-            
-            .speed-container {
-                max-width: 280px;
-            }
-        }
-
-        /* Orientación horizontal en móviles */
-        @media (max-height: 500px) {
-            #teleprompter {
-                font-size: 1.8rem;
-                padding: 5px;
-            }
-            
-            #current-line {
-                max-width: 90%;
-            }
-            
-            #text-input {
-                min-height: 60px;
-                max-height: 80px;
-            }
-            
-            #controls {
-                padding: 10px 8px;
-            }
-            
-            .main-controls {
-                flex-direction: row;
-                flex-wrap: nowrap;
-                gap: 8px;
-            }
-            
-            .buttons-container {
-                flex-wrap: nowrap;
-            }
-            
-            .speed-container {
-                min-width: 180px;
+                padding: 8px 10px;
+                min-width: 70px;
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -280,9 +167,7 @@
     </div>
     
     <div id="controls">
-        <textarea id="text-input" placeholder="Escribe o pega tu texto aquí... (Cada línea se mostrará individualmente)"></textarea>
-        
-        <div class="main-controls">
+        <div class="top-controls">
             <div class="buttons-container">
                 <button id="start-btn">▶ Iniciar</button>
                 <button id="pause-btn" disabled>⏸ Pausar</button>
@@ -296,6 +181,8 @@
                 <span id="speed-value">2x</span>
             </div>
         </div>
+        
+        <textarea id="text-input" placeholder="Escribe o pega tu texto aquí... (Cada línea se mostrará individualmente)"></textarea>
     </div>
 
     <script>
@@ -314,16 +201,15 @@
         let isPlaying = false;
         let intervalId = null;
         
-        // Preparar las líneas del texto
+        // Preparar líneas
         function prepareLines() {
-            lines = textInput.value.split('\n')
-                          .filter(line => line.trim() !== '');
+            lines = textInput.value.split('\n').filter(line => line.trim() !== '');
             currentIndex = 0;
         }
         
-        // Mostrar la línea actual
+        // Mostrar línea actual
         function showCurrentLine() {
-            if (lines.length === 0) return;
+            if (!lines.length) return;
             
             currentLineEl.style.opacity = 0;
             
@@ -333,26 +219,24 @@
             }, 300);
         }
         
-        // Avanzar a la siguiente línea
+        // Siguiente línea
         function nextLine() {
             currentIndex++;
-            
             if (currentIndex >= lines.length) {
                 pause();
                 return;
             }
-            
             showCurrentLine();
         }
         
-        // Iniciar el teleprompter
+        // Iniciar
         function start() {
             if (isPlaying) return;
             
-            if (lines.length === 0) {
+            if (!lines.length) {
                 prepareLines();
-                if (lines.length === 0) {
-                    alert('Por favor ingresa algún texto primero');
+                if (!lines.length) {
+                    alert('Ingresa texto primero');
                     return;
                 }
             }
@@ -362,23 +246,22 @@
             pauseBtn.disabled = false;
             
             const speed = parseFloat(speedControl.value);
-            const delay = (1 / speed) * 2000; // Fórmula ajustada
+            const delay = (1 / speed) * 2000;
             
             showCurrentLine();
             intervalId = setInterval(nextLine, delay);
         }
         
-        // Pausar el teleprompter
+        // Pausar
         function pause() {
             if (!isPlaying) return;
-            
             clearInterval(intervalId);
             isPlaying = false;
             startBtn.disabled = false;
             pauseBtn.disabled = true;
         }
         
-        // Reiniciar el teleprompter
+        // Reiniciar
         function reset() {
             pause();
             prepareLines();
@@ -389,24 +272,15 @@
         function updateSpeedDisplay() {
             const speed = parseFloat(speedControl.value);
             speedValue.textContent = speed.toFixed(1) + 'x';
-            
-            if (speed < 3) {
-                speedValue.className = 'slow-text';
-            } else if (speed > 7) {
-                speedValue.className = 'fast-text';
-            } else {
-                speedValue.className = '';
-            }
+            speedValue.className = speed < 3 ? 'slow-text' : speed > 7 ? 'fast-text' : '';
         }
         
-        // Event listeners
+        // Eventos
         startBtn.addEventListener('click', start);
         pauseBtn.addEventListener('click', pause);
         resetBtn.addEventListener('click', reset);
-        
         speedControl.addEventListener('input', () => {
             updateSpeedDisplay();
-            
             if (isPlaying) {
                 pause();
                 start();
@@ -414,18 +288,7 @@
         });
         
         // Texto de ejemplo
-        textInput.value = `Ejemplo de texto para el teleprompter:
-
-1. Este es un texto de muestra
-2. Puedes editarlo completamente
-3. Cada línea se mostrará individualmente
-4. Ajusta la velocidad según necesites
-
-Características:
-✔ Controles optimizados en pantalla
-✔ Barra de velocidad siempre visible
-✔ Diseño compacto y funcional`;
-
+        textInput.value = `Ejemplo de teleprompter:\n\n1. Controles arriba\n2. Texto abajo\n3. Diseño responsive`;
         updateSpeedDisplay();
     </script>
 </body>
