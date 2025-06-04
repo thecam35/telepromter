@@ -34,43 +34,21 @@
             overflow: hidden;
         }
         
-        #text-display {
-            flex: 1;
-            min-height: 50vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 15px;
-            overflow: auto;
-        }
-        
-        #current-line {
-            max-width: 100%;
-            width: 900px;
-            margin: 0 auto;
-            opacity: 1;
-            transition: opacity 0.5s ease;
-            word-break: break-word;
-            font-size: clamp(1.5rem, 4vw, 3.5rem);
-            line-height: 1.4;
-        }
-        
         #controls-container {
             background: var(--control-bg);
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
+            padding: 10px 15px;
         }
         
         #top-controls {
-            padding: 10px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
-            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 10px;
         }
         
         .buttons-container {
@@ -94,25 +72,6 @@
         
         button:hover {
             background: #555;
-        }
-        
-        #text-input-container {
-            padding: 10px 15px 15px;
-            background: var(--control-bg);
-        }
-        
-        #text-input {
-            width: 100%;
-            min-height: 80px;
-            max-height: 150px;
-            padding: 12px;
-            font-size: 0.95rem;
-            background: var(--text-area-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            resize: vertical;
-            box-sizing: border-box;
-            border-radius: 5px;
         }
         
         .speed-container {
@@ -158,15 +117,49 @@
         .slow-text { color: var(--slow-color); }
         .fast-text { color: var(--fast-color); }
 
+        #text-input-container {
+            margin-top: 10px;
+        }
+        
+        #text-input {
+            width: 100%;
+            min-height: 80px;
+            max-height: 120px;
+            padding: 12px;
+            font-size: 0.95rem;
+            background: var(--text-area-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            resize: vertical;
+            box-sizing: border-box;
+            border-radius: 5px;
+        }
+        
+        #text-display {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 15px;
+            overflow: auto;
+        }
+        
+        #current-line {
+            max-width: 100%;
+            width: 900px;
+            margin: 0 auto;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+            word-break: break-word;
+            font-size: clamp(1.5rem, 4vw, 3.5rem);
+            line-height: 1.4;
+        }
+
         /* Media Queries */
         @media (max-width: 768px) {
-            #text-display {
-                min-height: 40vh;
-            }
-            
-            #top-controls {
+            #controls-container {
                 padding: 8px 12px;
-                gap: 8px;
             }
             
             .buttons-container {
@@ -183,7 +176,7 @@
             
             #text-input {
                 min-height: 70px;
-                max-height: 120px;
+                max-height: 100px;
                 padding: 10px;
                 font-size: 0.9rem;
             }
@@ -202,7 +195,7 @@
             
             #text-input {
                 min-height: 60px;
-                max-height: 100px;
+                max-height: 80px;
             }
             
             button {
@@ -211,28 +204,11 @@
                 font-size: 0.8rem;
             }
         }
-
-        @media (max-height: 600px) {
-            #text-display {
-                min-height: 30vh;
-            }
-            
-            #current-line {
-                font-size: clamp(1rem, 3vh, 1.8rem);
-            }
-            
-            #text-input {
-                max-height: 80px;
-            }
-        }
     </style>
 </head>
 <body>
     <div id="teleprompter-container">
-        <div id="text-display">
-            <div id="current-line">Ajusta la velocidad y escribe tu texto abajo</div>
-        </div>
-        
+        <!-- CONTROLES ARRIBA DEL TODO -->
         <div id="controls-container">
             <div id="top-controls">
                 <div class="buttons-container">
@@ -249,9 +225,15 @@
                 </div>
             </div>
             
+            <!-- ÁREA DE TEXTO DEBAJO DE LOS CONTROLES -->
             <div id="text-input-container">
                 <textarea id="text-input" placeholder="Escribe o pega tu texto aquí... (Cada línea se mostrará individualmente)"></textarea>
             </div>
+        </div>
+        
+        <!-- ÁREA DE VISUALIZACIÓN DEL TEXTO (OCUPA EL RESTO DEL ESPACIO) -->
+        <div id="text-display">
+            <div id="current-line">Ajusta la velocidad y escribe tu texto arriba</div>
         </div>
     </div>
 
@@ -359,7 +341,7 @@
         });
         
         // Texto de ejemplo
-        textInput.value = `Ejemplo de teleprompter:\n\n1. Controles compactos\n2. Área de texto visible\n3. Adaptable a móviles\n4. Velocidad ajustable`;
+        textInput.value = `Ejemplo de teleprompter:\n\n1. Controles en la parte superior\n2. Área de texto visible\n3. Diseño optimizado`;
         updateSpeedDisplay();
         
         // Ajustar altura del textarea
