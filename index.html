@@ -104,6 +104,14 @@
         .slow-text { color: #4CAF50; }
         .fast-text { color: #F44336; }
 
+        #visitor-counter {
+            position: fixed;
+            left: 10px;
+            bottom: 10px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
         /* Media Queries para Responsive */
         @media (max-width: 992px) {
             #teleprompter {
@@ -146,6 +154,8 @@
         </div>
     </div>
 
+    <div id="visitor-counter">Visitantes: 1</div>
+
     <script>
         // Elementos DOM
         const currentLineEl = document.getElementById('current-line');
@@ -155,12 +165,20 @@
         const resetBtn = document.getElementById('reset-btn');
         const speedControl = document.getElementById('speed-control');
         const speedValue = document.getElementById('speed-value');
+        const visitorCounter = document.getElementById('visitor-counter');
         
         // Variables de estado
         let lines = [];
         let currentIndex = 0;
         let isPlaying = false;
         let intervalId = null;
+        
+        // Contador de visitantes simple (simulación)
+        function updateVisitorCounter() {
+            // En una aplicación real, esto se haría con un backend
+            let count = localStorage.getItem('visitorCount') || 1;
+            visitorCounter.textContent = `Visitantes: ${count}`;
+        }
         
         // Preparar las líneas del texto
         function prepareLines() {
@@ -259,6 +277,7 @@
         
         // Inicialización
         updateSpeedDisplay();
+        updateVisitorCounter();
     </script>
 </body>
 </html>
