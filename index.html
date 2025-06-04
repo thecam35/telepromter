@@ -5,11 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teleprompter Profesional</title>
     <style>
+        :root {
+            --bg-color: #000;
+            --control-bg: #111;
+            --text-area-bg: #222;
+            --border-color: #444;
+            --text-color: #FFF;
+            --slow-color: #4CAF50;
+            --fast-color: #F44336;
+        }
+        
         body {
             margin: 0;
             padding: 0;
-            background: #000;
-            color: #FFF;
+            background: var(--bg-color);
+            color: var(--text-color);
             font-family: 'Arial', sans-serif;
             height: 100vh;
             display: flex;
@@ -17,30 +27,39 @@
             overflow: hidden;
         }
         
-        #teleprompter {
+        #teleprompter-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        #text-display {
             flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 20px;
-            font-size: 3.5rem;
-            line-height: 1.4;
+            padding: 15px;
             overflow: auto;
         }
         
         #current-line {
-            max-width: 900px;
+            max-width: 100%;
+            width: 900px;
             margin: 0 auto;
             opacity: 1;
             transition: opacity 0.5s ease;
             word-break: break-word;
+            font-size: clamp(1.5rem, 4vw, 3.5rem);
+            line-height: 1.4;
         }
         
         #controls-container {
-            background: #111;
+            background: var(--control-bg);
             display: flex;
             flex-direction: column;
+            flex-shrink: 0;
         }
         
         #top-controls {
@@ -50,7 +69,7 @@
             align-items: center;
             gap: 15px;
             flex-wrap: wrap;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .buttons-container {
@@ -60,8 +79,8 @@
         }
         
         button {
-            background: #333;
-            color: white;
+            background: var(--border-color);
+            color: var(--text-color);
             border: none;
             padding: 10px 15px;
             border-radius: 5px;
@@ -69,23 +88,30 @@
             font-size: 1rem;
             min-width: 90px;
             white-space: nowrap;
+            transition: background 0.2s;
+        }
+        
+        button:hover {
+            background: #555;
         }
         
         #text-input-container {
             padding: 15px;
-            background: #111;
+            background: var(--control-bg);
         }
         
         #text-input {
             width: 100%;
             min-height: 100px;
+            max-height: 200px;
             padding: 15px;
-            font-size: 1.1rem;
-            background: #222;
-            color: white;
-            border: 1px solid #444;
+            font-size: 1rem;
+            background: var(--text-area-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
             resize: vertical;
             box-sizing: border-box;
+            border-radius: 5px;
         }
         
         .speed-container {
@@ -101,7 +127,7 @@
             flex: 1;
             -webkit-appearance: none;
             height: 8px;
-            background: #444;
+            background: var(--border-color);
             border-radius: 4px;
             min-width: 150px;
         }
@@ -110,9 +136,14 @@
             -webkit-appearance: none;
             width: 18px;
             height: 18px;
-            background: #fff;
+            background: var(--text-color);
             border-radius: 50%;
             cursor: pointer;
+            transition: transform 0.1s;
+        }
+        
+        #speed-control::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
         }
         
         #speed-value {
@@ -127,16 +158,17 @@
             white-space: nowrap;
         }
         
-        .slow-text { color: #4CAF50; }
-        .fast-text { color: #F44336; }
+        .slow-text { color: var(--slow-color); }
+        .fast-text { color: var(--fast-color); }
 
         /* Media Queries */
-        @media (max-width: 768px) {
-            #teleprompter {
-                font-size: 2.5rem;
-                padding: 10px;
+        @media (max-width: 992px) {
+            #current-line {
+                font-size: clamp(1.3rem, 4vw, 2.8rem);
             }
-            
+        }
+
+        @media (max-width: 768px) {
             #top-controls {
                 flex-direction: column;
                 gap: 10px;
@@ -151,11 +183,17 @@
                 width: 100%;
                 max-width: none;
             }
+            
+            #text-input {
+                min-height: 80px;
+                font-size: 0.95rem;
+            }
         }
 
         @media (max-width: 480px) {
-            #teleprompter {
-                font-size: 2rem;
+            #current-line {
+                font-size: clamp(1.1rem, 5vw, 2rem);
+                padding: 10px;
             }
             
             button {
@@ -166,36 +204,52 @@
             }
             
             #text-input {
-                min-height: 80px;
+                min-height: 70px;
                 padding: 10px;
-                font-size: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .speed-container {
+                min-width: 200px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            #current-line {
+                font-size: clamp(1rem, 3vh, 2rem);
+            }
+            
+            #text-input {
+                max-height: 150px;
             }
         }
     </style>
 </head>
 <body>
-    <div id="teleprompter">
-        <div id="current-line">Ajusta la velocidad y escribe tu texto abajo</div>
-    </div>
-    
-    <div id="controls-container">
-        <div id="top-controls">
-            <div class="buttons-container">
-                <button id="start-btn">▶ Iniciar</button>
-                <button id="pause-btn" disabled>⏸ Pausar</button>
-                <button id="reset-btn">↻ Reiniciar</button>
-            </div>
-            
-            <div class="speed-container">
-                <span class="slow-text">Lento</span>
-                <input type="range" id="speed-control" min="0.5" max="10" step="0.5" value="2">
-                <span class="fast-text">Rápido</span>
-                <span id="speed-value">2x</span>
-            </div>
+    <div id="teleprompter-container">
+        <div id="text-display">
+            <div id="current-line">Ajusta la velocidad y escribe tu texto abajo</div>
         </div>
         
-        <div id="text-input-container">
-            <textarea id="text-input" placeholder="Escribe o pega tu texto aquí... (Cada línea se mostrará individualmente)"></textarea>
+        <div id="controls-container">
+            <div id="top-controls">
+                <div class="buttons-container">
+                    <button id="start-btn">▶ Iniciar</button>
+                    <button id="pause-btn" disabled>⏸ Pausar</button>
+                    <button id="reset-btn">↻ Reiniciar</button>
+                </div>
+                
+                <div class="speed-container">
+                    <span class="slow-text">Lento</span>
+                    <input type="range" id="speed-control" min="0.5" max="10" step="0.5" value="2">
+                    <span class="fast-text">Rápido</span>
+                    <span id="speed-value">2x</span>
+                </div>
+            </div>
+            
+            <div id="text-input-container">
+                <textarea id="text-input" placeholder="Escribe o pega tu texto aquí... (Cada línea se mostrará individualmente)"></textarea>
+            </div>
         </div>
     </div>
 
@@ -230,6 +284,9 @@
             setTimeout(() => {
                 currentLineEl.textContent = lines[currentIndex];
                 currentLineEl.style.opacity = 1;
+                
+                // Asegurar que el texto sea visible (scroll al centro)
+                currentLineEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 300);
         }
         
@@ -250,7 +307,7 @@
             if (!lines.length) {
                 prepareLines();
                 if (!lines.length) {
-                    alert('Ingresa texto primero');
+                    alert('Por favor ingresa algún texto primero');
                     return;
                 }
             }
@@ -302,8 +359,19 @@
         });
         
         // Texto de ejemplo
-        textInput.value = `Ejemplo de teleprompter:\n\n1. Controles en la parte superior\n2. Área de texto visible\n3. Diseño completamente funcional\n4. Velocidad ajustable\n5. Adaptable a móviles`;
+        textInput.value = `Ejemplo de teleprompter:\n\n1. Texto perfectamente visible\n2. Diseño adaptable a cualquier pantalla\n3. Controles accesibles\n4. Velocidad ajustable\n5. Funciona en móviles y desktop`;
         updateSpeedDisplay();
+        
+        // Ajustar altura inicial del textarea
+        function adjustTextareaHeight() {
+            const textarea = document.getElementById('text-input');
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+        }
+        
+        textInput.addEventListener('input', adjustTextareaHeight);
+        window.addEventListener('resize', adjustTextareaHeight);
+        adjustTextareaHeight();
     </script>
 </body>
 </html>
