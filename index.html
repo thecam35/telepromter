@@ -13,11 +13,16 @@
             --text-color: #FFF;
             --slow-color: #4CAF50;
             --fast-color: #F44336;
+            --button-hover: #555;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         
         body {
-            margin: 0;
-            padding: 0;
             background: var(--bg-color);
             color: var(--text-color);
             font-family: 'Arial', sans-serif;
@@ -25,6 +30,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            touch-action: manipulation;
         }
         
         #teleprompter-container {
@@ -39,7 +45,9 @@
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
-            padding: 10px 15px;
+            padding: 12px 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            z-index: 10;
         }
         
         #top-controls {
@@ -48,91 +56,126 @@
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         
         .buttons-container {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            flex: 1;
+            min-width: 240px;
         }
         
         button {
             background: var(--border-color);
             color: var(--text-color);
             border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
+            padding: 10px 12px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
-            min-width: 80px;
+            font-size: 0.95rem;
+            min-width: 85px;
             white-space: nowrap;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            flex: 1;
         }
         
         button:hover {
-            background: #555;
+            background: var(--button-hover);
+            transform: translateY(-1px);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
         
         .speed-container {
             display: flex;
             align-items: center;
             gap: 6px;
-            flex: 1;
-            min-width: 200px;
-            max-width: 350px;
+            flex: 2;
+            min-width: 250px;
+            max-width: 400px;
         }
         
         #speed-control {
             flex: 1;
             -webkit-appearance: none;
-            height: 6px;
+            height: 8px;
             background: var(--border-color);
-            border-radius: 4px;
-            min-width: 120px;
+            border-radius: 5px;
+            outline: none;
+            min-width: 150px;
         }
         
         #speed-control::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             background: var(--text-color);
             border-radius: 50%;
             cursor: pointer;
             transition: transform 0.1s;
         }
         
+        #speed-control::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+        
         #speed-value {
-            width: 35px;
+            width: 40px;
             text-align: center;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            transition: color 0.3s;
         }
         
         .slow-text, .fast-text {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             white-space: nowrap;
+            user-select: none;
         }
         
         .slow-text { color: var(--slow-color); }
         .fast-text { color: var(--fast-color); }
 
         #text-input-container {
-            margin-top: 10px;
+            margin: 10px 0 20px;
+            transition: margin 0.3s;
         }
         
         #text-input {
             width: 100%;
-            min-height: 80px;
-            max-height: 120px;
-            padding: 12px;
-            font-size: 0.95rem;
+            min-height: 90px;
+            max-height: 150px;
+            padding: 14px;
+            font-size: 1rem;
             background: var(--text-area-bg);
             color: var(--text-color);
             border: 1px solid var(--border-color);
+            border-radius: 6px;
             resize: vertical;
-            box-sizing: border-box;
-            border-radius: 5px;
+            outline: none;
+            line-height: 1.5;
+            transition: all 0.3s;
+        }
+        
+        #text-input:focus {
+            border-color: #666;
+            box-shadow: 0 0 0 2px rgba(100,100,100,0.2);
+        }
+        
+        #text-input::placeholder {
+            font-size: 0.95rem;
+            color: #aaa;
+            transition: color 0.3s;
         }
         
         #text-display {
@@ -141,8 +184,9 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 15px;
+            padding: 20px 15px;
             overflow: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
         #current-line {
@@ -150,88 +194,148 @@
             width: 900px;
             margin: 0 auto;
             opacity: 1;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease, transform 0.3s;
             word-break: break-word;
-            font-size: clamp(1.5rem, 4vw, 3.5rem);
-            line-height: 1.4;
+            font-size: clamp(1.8rem, 5vw, 4rem);
+            line-height: 1.5;
+            font-weight: 500;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
-        /* Media Queries */
+        /* Media Queries optimizadas para móviles */
         @media (max-width: 768px) {
             #controls-container {
-                padding: 8px 12px;
+                padding: 10px 12px;
+            }
+            
+            #top-controls {
+                margin-bottom: 15px;
+                gap: 12px;
             }
             
             .buttons-container {
+                order: 2;
                 width: 100%;
-                justify-content: space-between;
+                min-width: 100%;
             }
             
             button {
-                padding: 6px 10px;
-                min-width: 70px;
-                font-size: 0.85rem;
-                flex: 1;
+                padding: 9px 10px;
+                min-width: 0;
+                font-size: 0.9rem;
+            }
+            
+            .speed-container {
+                order: 1;
+                min-width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            #text-input-container {
+                margin: 8px 0 25px;
             }
             
             #text-input {
                 min-height: 70px;
                 max-height: 100px;
-                padding: 10px;
+                padding: 12px;
+                font-size: 0.95rem;
+            }
+            
+            #text-input::placeholder {
                 font-size: 0.9rem;
             }
             
-            .speed-container {
-                width: 100%;
-                max-width: none;
+            #current-line {
+                font-size: clamp(1.6rem, 6vw, 3rem);
+                padding: 10px;
             }
         }
 
         @media (max-width: 480px) {
-            #current-line {
-                font-size: clamp(1.2rem, 5vw, 2rem);
+            #controls-container {
+                padding: 8px 10px;
+            }
+            
+            button {
                 padding: 8px;
+                font-size: 0.85rem;
+            }
+            
+            #text-input-container {
+                margin-bottom: 30px;
             }
             
             #text-input {
                 min-height: 60px;
-                max-height: 80px;
+                max-height: 85px;
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            #text-input::placeholder {
+                font-size: 0.85rem;
+            }
+            
+            #current-line {
+                font-size: clamp(1.4rem, 6vw, 2.5rem);
+                line-height: 1.4;
+            }
+            
+            .slow-text, .fast-text {
+                font-size: 0.8rem;
+            }
+            
+            #speed-control {
+                height: 6px;
+            }
+            
+            #speed-control::-webkit-slider-thumb {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            #text-input {
+                min-height: 55px;
+                max-height: 75px;
+                font-size: 0.85rem;
             }
             
             button {
-                padding: 5px 8px;
-                min-width: 60px;
-                font-size: 0.8rem;
+                font-size: 0.82rem;
+                padding: 7px;
             }
         }
     </style>
 </head>
 <body>
     <div id="teleprompter-container">
-        <!-- CONTROLES ARRIBA DEL TODO -->
+        <!-- CONTROLES SUPERIORES -->
         <div id="controls-container">
             <div id="top-controls">
-                <div class="buttons-container">
-                    <button id="start-btn">▶ Iniciar</button>
-                    <button id="pause-btn" disabled>⏸ Pausar</button>
-                    <button id="reset-btn">↻ Reiniciar</button>
-                </div>
-                
                 <div class="speed-container">
                     <span class="slow-text">Lento</span>
                     <input type="range" id="speed-control" min="0.5" max="10" step="0.5" value="2">
                     <span class="fast-text">Rápido</span>
                     <span id="speed-value">2x</span>
                 </div>
+                
+                <div class="buttons-container">
+                    <button id="start-btn">▶ Iniciar</button>
+                    <button id="pause-btn" disabled>⏸ Pausar</button>
+                    <button id="reset-btn">↻ Reiniciar</button>
+                </div>
             </div>
             
-            <!-- ÁREA DE TEXTO DEBAJO DE LOS CONTROLES -->
+            <!-- ÁREA DE TEXTO -->
             <div id="text-input-container">
                 <textarea id="text-input" placeholder="Escribe o pega tu texto aquí... (Cada línea se mostrará individualmente)"></textarea>
             </div>
         </div>
         
-        <!-- ÁREA DE VISUALIZACIÓN DEL TEXTO (OCUPA EL RESTO DEL ESPACIO) -->
+        <!-- ÁREA DE VISUALIZACIÓN DEL TEXTO -->
         <div id="text-display">
             <div id="current-line">Ajusta la velocidad y escribe tu texto arriba</div>
         </div>
@@ -252,6 +356,47 @@
         let currentIndex = 0;
         let isPlaying = false;
         let intervalId = null;
+        let currentSpeed = 2;
+        
+        // Inicialización
+        function init() {
+            // Texto de ejemplo
+            textInput.value = `Ejemplo de teleprompter:\n\n1. Controles intuitivos\n2. Diseño responsive\n3. Velocidad ajustable\n4. Optimizado para móviles\n5. Fácil de usar`;
+            
+            // Configurar eventos
+            setupEvents();
+            
+            // Ajustes iniciales
+            updateSpeedDisplay();
+            adjustTextarea();
+        }
+        
+        // Configurar eventos
+        function setupEvents() {
+            startBtn.addEventListener('click', start);
+            pauseBtn.addEventListener('click', pause);
+            resetBtn.addEventListener('click', reset);
+            
+            speedControl.addEventListener('input', function() {
+                currentSpeed = parseFloat(this.value);
+                updateSpeedDisplay();
+                if (isPlaying) {
+                    pause();
+                    start();
+                }
+            });
+            
+            textInput.addEventListener('input', adjustTextarea);
+            window.addEventListener('resize', adjustTextarea);
+            
+            // Soporte para teclado
+            document.addEventListener('keydown', function(e) {
+                if (e.code === 'Space' && !textInput.matches(':focus')) {
+                    e.preventDefault();
+                    if (isPlaying) pause(); else start();
+                }
+            });
+        }
         
         // Preparar líneas
         function prepareLines() {
@@ -268,7 +413,11 @@
             setTimeout(() => {
                 currentLineEl.textContent = lines[currentIndex];
                 currentLineEl.style.opacity = 1;
-                currentLineEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                currentLineEl.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                    inline: 'center'
+                });
             }, 300);
         }
         
@@ -282,7 +431,7 @@
             showCurrentLine();
         }
         
-        // Iniciar
+        // Iniciar teleprompter
         function start() {
             if (isPlaying) return;
             
@@ -298,14 +447,13 @@
             startBtn.disabled = true;
             pauseBtn.disabled = false;
             
-            const speed = parseFloat(speedControl.value);
-            const delay = (1 / speed) * 2000;
+            const delay = (1 / currentSpeed) * 2000;
             
             showCurrentLine();
             intervalId = setInterval(nextLine, delay);
         }
         
-        // Pausar
+        // Pausar teleprompter
         function pause() {
             if (!isPlaying) return;
             clearInterval(intervalId);
@@ -314,45 +462,34 @@
             pauseBtn.disabled = true;
         }
         
-        // Reiniciar
+        // Reiniciar teleprompter
         function reset() {
             pause();
             prepareLines();
             showCurrentLine();
         }
         
-        // Actualizar velocidad
+        // Actualizar visualización de velocidad
         function updateSpeedDisplay() {
-            const speed = parseFloat(speedControl.value);
-            speedValue.textContent = speed.toFixed(1) + 'x';
-            speedValue.className = speed < 3 ? 'slow-text' : speed > 7 ? 'fast-text' : '';
-        }
-        
-        // Eventos
-        startBtn.addEventListener('click', start);
-        pauseBtn.addEventListener('click', pause);
-        resetBtn.addEventListener('click', reset);
-        speedControl.addEventListener('input', () => {
-            updateSpeedDisplay();
-            if (isPlaying) {
-                pause();
-                start();
+            speedValue.textContent = currentSpeed.toFixed(1) + 'x';
+            
+            if (currentSpeed < 2) {
+                speedValue.className = 'slow-text';
+            } else if (currentSpeed > 6) {
+                speedValue.className = 'fast-text';
+            } else {
+                speedValue.className = '';
             }
-        });
-        
-        // Texto de ejemplo
-        textInput.value = `Ejemplo de teleprompter:\n\n1. Controles en la parte superior\n2. Área de texto visible\n3. Diseño optimizado`;
-        updateSpeedDisplay();
+        }
         
         // Ajustar altura del textarea
         function adjustTextarea() {
             textInput.style.height = 'auto';
-            textInput.style.height = (textInput.scrollHeight) + 'px';
+            textInput.style.height = Math.min(textInput.scrollHeight, 300) + 'px';
         }
         
-        textInput.addEventListener('input', adjustTextarea);
-        window.addEventListener('resize', adjustTextarea);
-        adjustTextarea();
+        // Iniciar la aplicación
+        init();
     </script>
 </body>
 </html>
