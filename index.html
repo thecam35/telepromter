@@ -37,20 +37,20 @@
             word-break: break-word;
         }
         
-        #controls {
+        #controls-container {
             background: #111;
-            padding: 12px 15px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
         }
         
-        .top-controls {
+        #top-controls {
+            padding: 12px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 15px;
             flex-wrap: wrap;
+            border-bottom: 1px solid #333;
         }
         
         .buttons-container {
@@ -69,6 +69,11 @@
             font-size: 1rem;
             min-width: 90px;
             white-space: nowrap;
+        }
+        
+        #text-input-container {
+            padding: 15px;
+            background: #111;
         }
         
         #text-input {
@@ -132,7 +137,7 @@
                 padding: 10px;
             }
             
-            .top-controls {
+            #top-controls {
                 flex-direction: column;
                 gap: 10px;
             }
@@ -157,6 +162,13 @@
                 padding: 8px 10px;
                 min-width: 70px;
                 font-size: 0.9rem;
+                flex: 1;
+            }
+            
+            #text-input {
+                min-height: 80px;
+                padding: 10px;
+                font-size: 1rem;
             }
         }
     </style>
@@ -166,8 +178,8 @@
         <div id="current-line">Ajusta la velocidad y escribe tu texto abajo</div>
     </div>
     
-    <div id="controls">
-        <div class="top-controls">
+    <div id="controls-container">
+        <div id="top-controls">
             <div class="buttons-container">
                 <button id="start-btn">▶ Iniciar</button>
                 <button id="pause-btn" disabled>⏸ Pausar</button>
@@ -182,7 +194,9 @@
             </div>
         </div>
         
-        <textarea id="text-input" placeholder="Escribe o pega tu texto aquí... (Cada línea se mostrará individualmente)"></textarea>
+        <div id="text-input-container">
+            <textarea id="text-input" placeholder="Escribe o pega tu texto aquí... (Cada línea se mostrará individualmente)"></textarea>
+        </div>
     </div>
 
     <script>
@@ -288,7 +302,7 @@
         });
         
         // Texto de ejemplo
-        textInput.value = `Ejemplo de teleprompter:\n\n1. Controles arriba\n2. Texto abajo\n3. Diseño responsive`;
+        textInput.value = `Ejemplo de teleprompter:\n\n1. Controles en la parte superior\n2. Área de texto visible\n3. Diseño completamente funcional\n4. Velocidad ajustable\n5. Adaptable a móviles`;
         updateSpeedDisplay();
     </script>
 </body>
