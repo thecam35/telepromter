@@ -41,10 +41,17 @@
             background: #111;
             padding: 15px;
             display: flex;
+            flex-direction: column;
             gap: 15px;
-            justify-content: center;
             align-items: center;
+        }
+        
+        .buttons-container {
+            display: flex;
+            gap: 10px;
             flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
         }
         
         button {
@@ -56,12 +63,13 @@
             cursor: pointer;
             font-size: 1rem;
             min-width: 100px;
+            flex: 1;
+            max-width: 120px;
         }
         
         #text-input {
-            flex: 1;
             width: 100%;
-            min-height: 120px;
+            min-height: 100px;
             max-width: 800px;
             padding: 15px;
             font-size: 1.1rem;
@@ -69,13 +77,16 @@
             color: white;
             border: 1px solid #444;
             resize: vertical;
+            box-sizing: border-box;
         }
         
         .speed-container {
             display: flex;
             align-items: center;
             gap: 10px;
-            width: 250px;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 10px;
         }
         
         #speed-control {
@@ -96,9 +107,14 @@
         }
         
         #speed-value {
-            width: 40px;
+            width: 50px;
             text-align: center;
             font-weight: bold;
+        }
+        
+        .slow-text, .fast-text {
+            font-size: 0.9rem;
+            white-space: nowrap;
         }
         
         .slow-text { color: #4CAF50; }
@@ -127,18 +143,20 @@
             }
             
             #text-input {
-                min-height: 100px;
+                min-height: 80px;
                 font-size: 1rem;
+                padding: 10px;
             }
             
             button {
                 padding: 8px 15px;
                 min-width: 80px;
                 font-size: 0.9rem;
+                max-width: 100px;
             }
             
             .speed-container {
-                width: 200px;
+                max-width: 350px;
             }
         }
 
@@ -156,23 +174,28 @@
                 gap: 10px;
             }
             
-            #text-input {
-                min-height: 80px;
-                padding: 10px;
+            .buttons-container {
+                gap: 8px;
+            }
+            
+            button {
+                padding: 8px 10px;
+                min-width: 70px;
+                font-size: 0.85rem;
+                max-width: 90px;
             }
             
             .speed-container {
-                width: 100%;
-                justify-content: center;
-                margin-top: 5px;
+                max-width: 300px;
             }
             
-            .speed-container span {
-                font-size: 0.9rem;
+            .slow-text, .fast-text {
+                font-size: 0.8rem;
             }
             
             #speed-value {
                 font-size: 0.9rem;
+                width: 40px;
             }
         }
 
@@ -186,9 +209,14 @@
             }
             
             button {
-                padding: 6px 12px;
-                min-width: 70px;
+                padding: 6px 8px;
+                min-width: 60px;
                 font-size: 0.8rem;
+                max-width: 80px;
+            }
+            
+            .speed-container {
+                max-width: 280px;
             }
         }
 
@@ -211,6 +239,10 @@
             #controls {
                 padding: 8px;
             }
+            
+            .speed-container {
+                max-width: 250px;
+            }
         }
     </style>
 </head>
@@ -222,17 +254,17 @@
     <div id="controls">
         <textarea id="text-input" placeholder="Escribe o pega tu texto aquí... (Cada línea se mostrará individualmente)"></textarea>
         
-        <div style="display: flex; gap: 10px; align-items: center; width: 100%; justify-content: center; flex-wrap: wrap;">
+        <div class="buttons-container">
             <button id="start-btn">▶ Iniciar</button>
             <button id="pause-btn" disabled>⏸ Pausar</button>
             <button id="reset-btn">↻ Reiniciar</button>
-            
-            <div class="speed-container">
-                <span class="slow-text">Lento</span>
-                <input type="range" id="speed-control" min="0.5" max="10" step="0.5" value="2">
-                <span class="fast-text">Rápido</span>
-                <span id="speed-value">2x</span>
-            </div>
+        </div>
+        
+        <div class="speed-container">
+            <span class="slow-text">Lento</span>
+            <input type="range" id="speed-control" min="0.5" max="10" step="0.5" value="2">
+            <span class="fast-text">Rápido</span>
+            <span id="speed-value">2x</span>
         </div>
     </div>
 
@@ -363,7 +395,8 @@ Características:
 ✔ Área de texto ampliada
 ✔ Control de velocidad preciso (0.5x - 10x)
 ✔ Diseño profesional y fácil de usar
-✔ Ahora completamente responsive`;
+✔ Ahora completamente responsive
+✔ Controles optimizados para móviles`;
 
         updateSpeedDisplay();
     </script>
