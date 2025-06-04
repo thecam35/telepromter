@@ -26,14 +26,14 @@
             padding: 20px;
             font-size: 3.5rem;
             line-height: 1.4;
-            overflow: auto;
+            overflow: hidden;
         }
         
         #current-line {
             max-width: 900px;
             margin: 0 auto;
             opacity: 1;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.3s ease;
             word-break: break-word;
         }
         
@@ -108,37 +108,12 @@
         @media (max-width: 992px) {
             #teleprompter {
                 font-size: 3rem;
-                padding: 15px;
-            }
-            
-            #current-line {
-                max-width: 700px;
             }
         }
 
         @media (max-width: 768px) {
             #teleprompter {
                 font-size: 2.5rem;
-                padding: 10px;
-            }
-            
-            #current-line {
-                max-width: 550px;
-            }
-            
-            #text-input {
-                min-height: 100px;
-                font-size: 1rem;
-            }
-            
-            button {
-                padding: 8px 15px;
-                min-width: 80px;
-                font-size: 0.9rem;
-            }
-            
-            .speed-container {
-                width: 200px;
             }
         }
 
@@ -146,77 +121,12 @@
             #teleprompter {
                 font-size: 2rem;
             }
-            
-            #current-line {
-                max-width: 400px;
-            }
-            
-            #controls {
-                padding: 10px;
-                gap: 10px;
-            }
-            
-            #text-input {
-                min-height: 80px;
-                padding: 10px;
-            }
-            
-            .speed-container {
-                width: 100%;
-                justify-content: center;
-                margin-top: 5px;
-            }
-            
-            .speed-container span {
-                font-size: 0.9rem;
-            }
-            
-            #speed-value {
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 400px) {
-            #teleprompter {
-                font-size: 1.6rem;
-            }
-            
-            #current-line {
-                max-width: 300px;
-            }
-            
-            button {
-                padding: 6px 12px;
-                min-width: 70px;
-                font-size: 0.8rem;
-            }
-        }
-
-        /* Orientación horizontal en móviles */
-        @media (max-height: 500px) {
-            #teleprompter {
-                font-size: 1.8rem;
-                padding: 5px;
-            }
-            
-            #current-line {
-                max-width: 90%;
-            }
-            
-            #text-input {
-                min-height: 60px;
-                max-height: 80px;
-            }
-            
-            #controls {
-                padding: 8px;
-            }
         }
     </style>
 </head>
 <body>
     <div id="teleprompter">
-        <div id="current-line">Escribe tu texto abajo y haz clic en ▶ Iniciar</div>
+        <div id="current-line">Escribe tu texto y haz clic en ▶ Iniciar</div>
     </div>
     
     <div id="controls">
@@ -252,22 +162,23 @@
         let isPlaying = false;
         let intervalId = null;
         
-        // Preparar las líneas del texto actual
+        // Preparar las líneas del texto
         function prepareLines() {
-            lines = textInput.value.split('\n').filter(line => line.trim() !== '');
+            lines = textInput.value.split('\n')
+                          .filter(line => line.trim() !== '');
             currentIndex = 0;
         }
         
-        // Mostrar la línea actual con efecto de transición
+        // Mostrar la línea actual con transición
         function showCurrentLine() {
-            if (lines.length === 0) return;
+            if (lines.length === 0 || currentIndex >= lines.length) return;
             
             currentLineEl.style.opacity = 0;
             
             setTimeout(() => {
                 currentLineEl.textContent = lines[currentIndex];
                 currentLineEl.style.opacity = 1;
-            }, 300);
+            }, 200);
         }
         
         // Avanzar a la siguiente línea
@@ -286,10 +197,10 @@
         function start() {
             if (isPlaying) return;
             
-            prepareLines(); // Carga el texto actual del textarea
+            prepareLines();
             
             if (lines.length === 0) {
-                alert('Por favor escribe o pega tu texto primero');
+                alert('Por favor ingresa algún texto primero');
                 return;
             }
             
@@ -298,7 +209,7 @@
             pauseBtn.disabled = false;
             
             const speed = parseFloat(speedControl.value);
-            const delay = (1 / speed) * 2000; // Calcula el tiempo entre líneas
+            const delay = (1 / speed) * 2000; // 2 segundos en velocidad 1x
             
             showCurrentLine();
             intervalId = setInterval(nextLine, delay);
@@ -314,14 +225,14 @@
             pauseBtn.disabled = true;
         }
         
-        // Reiniciar el teleprompter (vuelve al inicio)
+        // Reiniciar el teleprompter
         function reset() {
             pause();
             prepareLines();
             showCurrentLine();
         }
         
-        // Actualizar la visualización de velocidad
+        // Actualizar velocidad
         function updateSpeedDisplay() {
             const speed = parseFloat(speedControl.value);
             speedValue.textContent = speed.toFixed(1) + 'x';
@@ -333,22 +244,18 @@
             } else {
                 speedValue.className = '';
             }
+            
+            if (isPlaying) {
+                pause();
+                start();
+            }
         }
         
         // Event listeners
         startBtn.addEventListener('click', start);
         pauseBtn.addEventListener('click', pause);
         resetBtn.addEventListener('click', reset);
-        
-        speedControl.addEventListener('input', () => {
-            updateSpeedDisplay();
-            
-            // Si está en reproducción, actualiza la velocidad al vuelo
-            if (isPlaying) {
-                pause();
-                start();
-            }
-        });
+        speedControl.addEventListener('input', updateSpeedDisplay);
         
         // Inicialización
         updateSpeedDisplay();
