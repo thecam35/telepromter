@@ -287,7 +287,7 @@
         function start() {
             if (isPlaying) return;
             
-            if (lines.length === 0) {
+            if (lines.length === 0 || currentIndex >= lines.length) {
                 prepareLines();
                 if (lines.length === 0) {
                     alert('Por favor ingresa algún texto primero');
@@ -365,6 +365,8 @@ Características:
 ✔ Diseño profesional y fácil de usar
 ✔ Ahora completamente responsive`;
 
+        // Inicializar mostrando solo la primera línea
+        prepareLines();
         updateSpeedDisplay();
     </script>
 </body>
