@@ -36,6 +36,7 @@
         
         #text-display {
             flex: 1;
+            min-height: 50vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -63,18 +64,18 @@
         }
         
         #top-controls {
-            padding: 12px 15px;
+            padding: 10px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
             flex-wrap: wrap;
             border-bottom: 1px solid var(--border-color);
         }
         
         .buttons-container {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
         
@@ -82,11 +83,11 @@
             background: var(--border-color);
             color: var(--text-color);
             border: none;
-            padding: 10px 15px;
+            padding: 8px 12px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1rem;
-            min-width: 90px;
+            font-size: 0.9rem;
+            min-width: 80px;
             white-space: nowrap;
             transition: background 0.2s;
         }
@@ -96,16 +97,16 @@
         }
         
         #text-input-container {
-            padding: 15px;
+            padding: 10px 15px 15px;
             background: var(--control-bg);
         }
         
         #text-input {
             width: 100%;
-            min-height: 100px;
-            max-height: 200px;
-            padding: 15px;
-            font-size: 1rem;
+            min-height: 80px;
+            max-height: 150px;
+            padding: 12px;
+            font-size: 0.95rem;
             background: var(--text-area-bg);
             color: var(--text-color);
             border: 1px solid var(--border-color);
@@ -117,44 +118,40 @@
         .speed-container {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             flex: 1;
-            min-width: 250px;
-            max-width: 400px;
+            min-width: 200px;
+            max-width: 350px;
         }
         
         #speed-control {
             flex: 1;
             -webkit-appearance: none;
-            height: 8px;
+            height: 6px;
             background: var(--border-color);
             border-radius: 4px;
-            min-width: 150px;
+            min-width: 120px;
         }
         
         #speed-control::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             background: var(--text-color);
             border-radius: 50%;
             cursor: pointer;
             transition: transform 0.1s;
         }
         
-        #speed-control::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
-        }
-        
         #speed-value {
-            width: 40px;
+            width: 35px;
             text-align: center;
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
         
         .slow-text, .fast-text {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             white-space: nowrap;
         }
         
@@ -162,16 +159,14 @@
         .fast-text { color: var(--fast-color); }
 
         /* Media Queries */
-        @media (max-width: 992px) {
-            #current-line {
-                font-size: clamp(1.3rem, 4vw, 2.8rem);
-            }
-        }
-
         @media (max-width: 768px) {
+            #text-display {
+                min-height: 40vh;
+            }
+            
             #top-controls {
-                flex-direction: column;
-                gap: 10px;
+                padding: 8px 12px;
+                gap: 8px;
             }
             
             .buttons-container {
@@ -179,48 +174,55 @@
                 justify-content: space-between;
             }
             
-            .speed-container {
-                width: 100%;
-                max-width: none;
-            }
-            
-            #text-input {
-                min-height: 80px;
-                font-size: 0.95rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            #current-line {
-                font-size: clamp(1.1rem, 5vw, 2rem);
-                padding: 10px;
-            }
-            
             button {
-                padding: 8px 10px;
+                padding: 6px 10px;
                 min-width: 70px;
-                font-size: 0.9rem;
+                font-size: 0.85rem;
                 flex: 1;
             }
             
             #text-input {
                 min-height: 70px;
+                max-height: 120px;
                 padding: 10px;
                 font-size: 0.9rem;
             }
             
             .speed-container {
-                min-width: 200px;
+                width: 100%;
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #current-line {
+                font-size: clamp(1.2rem, 5vw, 2rem);
+                padding: 8px;
+            }
+            
+            #text-input {
+                min-height: 60px;
+                max-height: 100px;
+            }
+            
+            button {
+                padding: 5px 8px;
+                min-width: 60px;
+                font-size: 0.8rem;
             }
         }
 
         @media (max-height: 600px) {
+            #text-display {
+                min-height: 30vh;
+            }
+            
             #current-line {
-                font-size: clamp(1rem, 3vh, 2rem);
+                font-size: clamp(1rem, 3vh, 1.8rem);
             }
             
             #text-input {
-                max-height: 150px;
+                max-height: 80px;
             }
         }
     </style>
@@ -284,8 +286,6 @@
             setTimeout(() => {
                 currentLineEl.textContent = lines[currentIndex];
                 currentLineEl.style.opacity = 1;
-                
-                // Asegurar que el texto sea visible (scroll al centro)
                 currentLineEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }, 300);
         }
@@ -359,19 +359,18 @@
         });
         
         // Texto de ejemplo
-        textInput.value = `Ejemplo de teleprompter:\n\n1. Texto perfectamente visible\n2. Diseño adaptable a cualquier pantalla\n3. Controles accesibles\n4. Velocidad ajustable\n5. Funciona en móviles y desktop`;
+        textInput.value = `Ejemplo de teleprompter:\n\n1. Controles compactos\n2. Área de texto visible\n3. Adaptable a móviles\n4. Velocidad ajustable`;
         updateSpeedDisplay();
         
-        // Ajustar altura inicial del textarea
-        function adjustTextareaHeight() {
-            const textarea = document.getElementById('text-input');
-            textarea.style.height = 'auto';
-            textarea.style.height = (textarea.scrollHeight) + 'px';
+        // Ajustar altura del textarea
+        function adjustTextarea() {
+            textInput.style.height = 'auto';
+            textInput.style.height = (textInput.scrollHeight) + 'px';
         }
         
-        textInput.addEventListener('input', adjustTextareaHeight);
-        window.addEventListener('resize', adjustTextareaHeight);
-        adjustTextareaHeight();
+        textInput.addEventListener('input', adjustTextarea);
+        window.addEventListener('resize', adjustTextarea);
+        adjustTextarea();
     </script>
 </body>
 </html>
